@@ -31,11 +31,13 @@ def list_maker():
     gen = chain(gen1, gen2, gen3)
 
     uploader_and_uploads = {}
-
+    count = 0
     for page in gen:
 
         file_name = page.title()
         if file_name.startswith("File:"):
+            count += 1 
+            print(count)
 
             Uploader = uploader(file_name, link=False)
             
