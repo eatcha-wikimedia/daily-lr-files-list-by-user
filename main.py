@@ -36,15 +36,15 @@ def list_maker():
     
     category1 = pywikibot.Category(SITE,'License review needed')
     gen1 = pagegenerators.CategorizedPageGenerator(category1)
-    category2 = pywikibot.Category(SITE,'License review needed (video)')
-    gen2 = pagegenerators.CategorizedPageGenerator(category2)
-    category3 = pywikibot.Category(SITE,'License review needed (audio)')
-    gen3 = pagegenerators.CategorizedPageGenerator(category3)
-    gen = chain(gen1, gen2, gen3)
+    #category2 = pywikibot.Category(SITE,'License review needed (video)')
+    #gen2 = pagegenerators.CategorizedPageGenerator(category2)
+    #category3 = pywikibot.Category(SITE,'License review needed (audio)')
+    #gen3 = pagegenerators.CategorizedPageGenerator(category3)
+    #gen = chain(gen1, gen2, gen3)
 
     uploader_and_uploads = {}
     count = 0
-    for page in gen:
+    for page in gen1:
 
         file_name = page.title()
         if file_name.startswith("File:"):
