@@ -40,7 +40,7 @@ def list_maker():
     gen2 = pagegenerators.CategorizedPageGenerator(category2)
     category3 = pywikibot.Category(SITE,'License review needed (audio)')
     gen3 = pagegenerators.CategorizedPageGenerator(category3)
-    gen = list(chain(gen1, gen2, gen3))
+    gen = chain(gen1, gen2, gen3)
 
     uploader_and_uploads = {}
     count = 0
@@ -49,7 +49,7 @@ def list_maker():
         file_name = page.title()
         if file_name.startswith("File:"):
             count += 1 
-            print(count)
+            print("%d - %s" % (count, file_name))
 
             Uploader = uploader(file_name, link=False)
             
