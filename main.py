@@ -1,7 +1,7 @@
 import pywikibot
 from itertools import chain
 from pywikibot import pagegenerators
-
+SITE = pywikibot.Site()
 
 def uploader(filename, link=True):
     """User that uploaded the file."""
@@ -64,8 +64,6 @@ def list_maker():
             pass
 
 def main():
-    
-    SITE = pywikibot.Site()
     if not SITE.logged_in():
         SITE.login()
 
