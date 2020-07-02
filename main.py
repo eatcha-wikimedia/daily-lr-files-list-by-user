@@ -71,9 +71,8 @@ def list_maker():
             _text = ( _text + ( "\n%s|%s" % (f, i) ) )
         new_text = re.sub("</gallery>", "%s\n</gallery>" % (_text) , new_text)
         summary =  "Adding %d files" % (i)
-        old_text = user_review_subpage.get()
         try:
-            commit(old_text, new_text, user_review_subpage, summary)
+            commit("", new_text, user_review_subpage, summary)
         except pywikibot.LockedPage as error:
             pass
 
