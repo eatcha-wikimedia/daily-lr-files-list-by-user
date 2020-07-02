@@ -15,6 +15,17 @@ def uploader(filename, link=True):
         return "[[User:%s|%s]]" % (username, username)
     return username
 
+def out(text, newline=True, date=False, color=None):
+    """output some text to the consoloe / log."""
+    if color:
+        text = "\03{%s}%s\03{default}" % (color, text)
+    dstr = (
+        "%s: " % datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+        if date
+        else ""
+    )
+    pywikibot.stdout("%s%s" % (dstr, text), newline=newline)
+
 def commit(old_text, new_text, page, summary):
     """Show diff and submit text to page."""
     out("\nAbout to make changes at : '%s'" % page.title())
