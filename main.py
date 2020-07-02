@@ -39,6 +39,9 @@ def list_maker():
                 uploader_and_uploads[Uploader] = files_list
             else:
                 uploader_and_uploads[Uploader] = [file_name]
+    
+    for Uploader, files_list in uploader_and_uploads.items():
+        
             
         
 
