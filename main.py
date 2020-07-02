@@ -1,7 +1,7 @@
 import pywikibot
 from itertools import chain
 from pywikibot import pagegenerators
-SITE = pywikibot.Site()
+
 
 def uploader(filename, link=True):
     """User that uploaded the file."""
@@ -21,7 +21,7 @@ def commit(old_text, new_text, page, summary):
     page.put(new_text, summary=summary, watchArticle=True, minorEdit=False)
 
 def list_maker():
-
+    
     category1 = pywikibot.Category(SITE,'License review needed')
     gen1 = pagegenerators.CategorizedPageGenerator(category1)
     category2 = pywikibot.Category(SITE,'License review needed (video)')
@@ -64,12 +64,14 @@ def list_maker():
             pass
 
 def main():
+    
+    SITE = pywikibot.Site()
     if not SITE.logged_in():
         SITE.login()
 
     list_maker()
 
-if __name__ == "__name__":
+if __name__ == "__main__":
     try:
         main()
     finally:
