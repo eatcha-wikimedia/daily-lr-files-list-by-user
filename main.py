@@ -22,17 +22,17 @@ def commit(old_text, new_text, page, summary):
 
 def list_maker():
     
-    category1 = pywikibot.Category(SITE,'License review needed')
-    gen1 = pagegenerators.CategorizedPageGenerator(category1)
+    # category1 = pywikibot.Category(SITE,'License review needed')
+    # gen1 = pagegenerators.CategorizedPageGenerator(category1)
     category2 = pywikibot.Category(SITE,'License review needed (video)')
     gen2 = pagegenerators.CategorizedPageGenerator(category2)
-    category3 = pywikibot.Category(SITE,'License review needed (audio)')
-    gen3 = pagegenerators.CategorizedPageGenerator(category3)
-    gen = chain(gen1, gen2, gen3)
+    # category3 = pywikibot.Category(SITE,'License review needed (audio)')
+    # gen3 = pagegenerators.CategorizedPageGenerator(category3)
+    # gen = chain(gen1, gen2, gen3)
 
     uploader_and_uploads = {}
     count = 0
-    for page in gen:
+    for page in gen2:
 
         file_name = page.title()
         if file_name.startswith("File:"):
