@@ -60,7 +60,7 @@ def list_maker():
         old_text = user_review_subpage.get()
         try:
             commit(old_text, new_text, user_review_subpage, summary)
-        pywikibot.LockedPage as error:
+        except pywikibot.LockedPage as error:
             pass
 
 def main():
