@@ -1,4 +1,5 @@
 import pywikibot
+import re
 from itertools import chain
 from pywikibot import pagegenerators
 SITE = pywikibot.Site()
