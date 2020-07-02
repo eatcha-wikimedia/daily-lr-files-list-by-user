@@ -41,9 +41,21 @@ def list_maker():
                 uploader_and_uploads[Uploader] = [file_name]
     
     for Uploader, files_list in uploader_and_uploads.items():
-        
-            
-        
+        user_review_subpage_name = "User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/%s" % Uploader
+        user_review_subpage = pywikibot.Page(SITE, user_review_subpage_name)
+        new_text = "<gallery showfilename=yes>\n</gallery>\n[[Category:Files requiring license review sorted by user name]]"
+        i = 0
+        _text = ""
+        for f in files_list:
+            i += 1
+            _text = ( _text + ( "\n%s|%s" % (f, i) ) )
+        new_text = re.sub("</gallery>", "%s\n</gallery>" % (_text) , new_text)
+        summary =  "Adding %d files" % (i)
+        old_text = user_review_subpage.get()
+        try:
+            commit(old_text, new_text, user_review_subpage, summary)
+        pywikibot.LockedPage as error:
+            pass
 
 def main():
     if not SITE.logged_in():
