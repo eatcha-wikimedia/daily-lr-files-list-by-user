@@ -77,7 +77,9 @@ def list_maker():
         except pywikibot.LockedPage as error:
             pass
 
-def main():
+def main(*args)
+    global SITE
+    args = pywikibot.handle_args(*args)
     if not SITE.logged_in():
         SITE.login()
 
