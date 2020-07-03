@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pywikibot
 import re
 from itertools import chain
