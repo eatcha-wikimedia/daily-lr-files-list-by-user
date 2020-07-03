@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pywikibot
 from pywikibot import pagegenerators
 import concurrent.futures
