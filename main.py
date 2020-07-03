@@ -2,7 +2,6 @@ import pywikibot
 import re
 from itertools import chain
 from pywikibot import pagegenerators
-import time
 
 def uploader(filename, link=True):
     """User that uploaded the file."""
