@@ -57,6 +57,9 @@ def list_maker():
             except pywikibot.NoPage:
                 user_review_subpage_old_text = "<gallery showfilename=yes>\n</gallery>\n[[Category:Files requiring license review sorted by user name]]"
             
+            if file_name in user_review_subpage_old_text:
+                continue
+            
             if (user_review_subpage_old_text.find('<gallery showfilename=yes>') != -1):
                 pass
             else:
@@ -70,11 +73,10 @@ def list_maker():
             
             user_review_subpage_new_text = re.sub("</gallery>", "%s|%s\n</gallery>" % (file_name, _count,) , user_review_subpage_old_text)
             user_review_subpage_EditSummary = "Adding [[%s]]" % (file_name)
-            if filename not in user_review_subpage_old_text:
-                try:
-                    commit(user_review_subpage_old_text, user_review_subpage_new_text, user_review_subpage, "{0}".format(user_review_subpage_EditSummary))
-                except pywikibot.LockedPage as error:
-                    pass
+            try:
+                commit(user_review_subpage_old_text, user_review_subpage_new_text, user_review_subpage, "{0}".format(user_review_subpage_EditSummary))
+            except pywikibot.LockedPage as error:
+                pass
 
 def main(*args):
     global SITE
