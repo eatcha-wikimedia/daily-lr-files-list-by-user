@@ -3,7 +3,6 @@ import re
 from itertools import chain
 from pywikibot import pagegenerators
 import time
-SITE = pywikibot.Site()
 
 def uploader(filename, link=True):
     """User that uploaded the file."""
@@ -44,42 +43,43 @@ def list_maker():
     gen = chain(gen1, gen2, gen3)
 
     uploader_and_uploads = {}
-    count = 0
-    for page in gen1:
-        time.sleep(0.1)
+    __count = 0
+    for page in gen:
         file_name = page.title()
         if file_name.startswith("File:"):
-            count += 1 
-            print("%d - %s" % (count, file_name))
-
+            __count += 1 
+            print("%d - %s" % (__count, file_name))
             Uploader = uploader(file_name, link=False)
+            user_review_subpage_name = "User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/%s" % Uploader
+            user_review_subpage = pywikibot.Page(SITE, user_review_subpage_name)
+            try:
+                user_review_subpage_old_text = user_review_subpage.get(get_redirect=True, force=True)
+            except pywikibot.NoPage:
+                user_review_subpage_old_text = "<gallery showfilename=yes>\n</gallery>\n[[Category:Files requiring license review sorted by user name]]"
             
-            if uploader_and_uploads.get(Uploader):
-                files_list = uploader_and_uploads.get(Uploader)
-                files_list.append(file_name)
-                uploader_and_uploads[Uploader] = files_list
+            if (user_review_subpage_old_text.find('<gallery showfilename=yes>') != -1):
+                pass
             else:
-                uploader_and_uploads[Uploader] = [file_name]
-    
-    for Uploader, files_list in uploader_and_uploads.items():
-        user_review_subpage_name = "User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/%s" % Uploader
-        user_review_subpage = pywikibot.Page(SITE, user_review_subpage_name)
-        new_text = "<gallery showfilename=yes>\n</gallery>\n[[Category:Files requiring license review sorted by user name]]"
-        i = 0
-        _text = ""
-        for f in files_list:
-            i += 1
-            _text = ( _text + ( "\n%s|%s" % (f, i) ) )
-        new_text = re.sub("</gallery>", "%s\n</gallery>" % (_text) , new_text)
-        summary =  "Adding %d files" % (i)
-        try:
-            commit("", new_text, user_review_subpage, summary)
-        except pywikibot.LockedPage as error:
-            pass
+                user_review_subpage_old_text = "<gallery showfilename=yes>\n</gallery>\n[[Category:Files requiring license review sorted by user name]]"
+            
+            m = re.search(r"(?ms)<gallery showfilename=yes>(.*)</gallery>", user_review_subpage_old_text)
+            try:
+                _count = m.group(0).count("\n")
+            except:
+                _count = 1
+            
+            user_review_subpage_new_text = re.sub("</gallery>", "%s|%s\n</gallery>" % (file_name, _count,) , user_review_subpage_old_text)
+            user_review_subpage_EditSummary = "Adding [[%s]]" % (file_name)
+            if filename not in user_review_subpage_old_text:
+                try:
+                    commit(user_review_subpage_old_text, user_review_subpage_new_text, user_review_subpage, "{0}".format(user_review_subpage_EditSummary))
+                except pywikibot.LockedPage as error:
+                    pass
 
 def main(*args):
     global SITE
     args = pywikibot.handle_args(*args)
+    SITE = pywikibot.Site()
     if not SITE.logged_in():
         SITE.login()
 
