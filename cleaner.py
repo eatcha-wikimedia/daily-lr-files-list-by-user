@@ -11,7 +11,7 @@ def worker(page):
         new_text = ""
         EditSummary = "flushed old list, will generate new list every week."
         if new_text == old_text:
-            continue
+            pass
         try:
             page.put(new_text, summary=EditSummary, watch=True, minor=False)
         except:
