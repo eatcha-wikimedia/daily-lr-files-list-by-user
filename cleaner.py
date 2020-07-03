@@ -9,12 +9,11 @@ def worker(page):
         print(name)
         file_page = pywikibot.Page(SITE, name)
         old_text = file_page.get(get_redirect=True, force=True)
-        new_text = ""
+        if old_text.isspace():
+            return
         EditSummary = "flushed old list, will generate new list every week."
-        if new_text == old_text:
-            pass
         try:
-            page.put(new_text, summary=EditSummary, watch=True, minor=False)
+            page.put("", summary=EditSummary, watch=True, minor=False)
         except:
             pass
 
