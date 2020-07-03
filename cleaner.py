@@ -26,7 +26,7 @@ def main(*args):
         SITE.login()
     gen = pagegenerators.CategorizedPageGenerator(pywikibot.Category(SITE,'Files requiring license review sorted by user name'))
     with concurrent.futures.ThreadPoolExecutor() as executor:
-    executor.map(download_image, gen)
+    executor.map(worker, gen)
 
 if __name__ == "__main__":
   try:
