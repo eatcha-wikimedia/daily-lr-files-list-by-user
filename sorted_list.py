@@ -35,13 +35,14 @@ def main(*args):
         serial_no += 1
         name = x[0]
         count = x[1]
-        _row = """\n| %d\n| %s\n| %d\n| link to files\n|- style="background:  #ffffff; color:  #000000  ;" """ % (
+        _row = """\n| %d\n| %s\n| %d\n| [[User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/%s|%s]]\n|- style="background:  #ffffff; color:  #000000  ;" """ % (
             serial_no,
             name,
-            
-            
+            count,
+            name,
+            name
             )
-        row_text = row_text + 
+        row_text = row_text + _row
         
 
 
