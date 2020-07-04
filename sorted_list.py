@@ -38,14 +38,14 @@ def main(*args):
         name = gallery_page.replace("User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/","")
         count = x[1][0]
         print (count)
-        _row = """\n| %d\n| {{noping|%s}}\n| %d\n| [[User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/%s|%s]]\n|- style="background:  #ffffff; color:  #000000  ;" """ % (
+        _row = """\n| %d\n| {{noping|%s}}\n| %d\n| [[User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/%s|Gallery for %s's files]]\n|- style="background:  #ffffff; color:  #000000  ;" """ % (
             serial_no,
             name,
             count,
             name,
             name
             )
-        row_text = row_text + _row
+        row_text =  _row + row_text
     new_text = init_text + row_text + "\n|}"
     list_page_name = "User:Eatcha/sandbox"
     list_page = pywikibot.Page(SITE, list_page_name)
