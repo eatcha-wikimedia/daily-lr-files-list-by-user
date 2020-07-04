@@ -17,7 +17,7 @@ def main(*args):
             file_page = pywikibot.Page(SITE, name)
             content = file_page.get(get_redirect=True, force=True)
             number_of_files = content.count("File:")
-            uploader_and_uploads[name] = [number_of_files]
+            num_name_dict[name] = [number_of_files]
     print("sorting")
     sorted_num_name_dict = sorted(num_name_dict.items(), key=operator.itemgetter(1))
     
