@@ -18,7 +18,7 @@ def main(*args):
             content = file_page.get(get_redirect=True, force=True)
             number_of_files = content.count("File:")
             uploader_and_uploads[name] = [number_of_files]
-
+    print("sorting")
     sorted_num_name_dict = sorted(num_name_dict.items(), key=operator.itemgetter(1))
     
     init_text = """{| class="wikitable sortable"\n|-\n
@@ -31,6 +31,7 @@ def main(*args):
     row_text = ""
     
     serial_no = 0
+    print ("creating rows")
     for x in sorted_num_name_dict:
         serial_no += 1
         name = x[0]
@@ -43,6 +44,13 @@ def main(*args):
             name
             )
         row_text = row_text + _row
+    new_text = init_text + row_text + "\n|}"
+    list_page_name = "User:Eatcha/sandbox"
+    list_page = pywikibot.Page(SITE, list_page_name)
+    summary = "list of files"
+    print ("saving list")
+    list_page.put(new_text, summary=summary, watchArticle=True, minorEdit=False)
+    print ("OK")
         
 
 
