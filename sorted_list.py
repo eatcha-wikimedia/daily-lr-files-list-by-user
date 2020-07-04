@@ -34,10 +34,11 @@ def main(*args):
     print ("creating rows")
     for x in sorted_num_name_dict:
         serial_no += 1
-        name = x[0]
-        count = str(x[1])
+        gallery_page = x[0]
+        name = gallery_page.replace("User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/","")
+        count = x[1][0]
         print (count)
-        _row = """\n| %d\n| %s\n| %s\n| [[User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/%s|%s]]\n|- style="background:  #ffffff; color:  #000000  ;" """ % (
+        _row = """\n| %d\n| {{noping|%s}}\n| %d\n| [[User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/%s|%s]]\n|- style="background:  #ffffff; color:  #000000  ;" """ % (
             serial_no,
             name,
             count,
