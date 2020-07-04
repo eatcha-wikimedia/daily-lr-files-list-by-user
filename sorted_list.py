@@ -39,7 +39,7 @@ def main(*args):
         _row = """\n| %d\n| %s\n| %d\n| [[User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/%s|%s]]\n|- style="background:  #ffffff; color:  #000000  ;" """ % (
             serial_no,
             name,
-            count,
+            int(count),
             name,
             name
             )
