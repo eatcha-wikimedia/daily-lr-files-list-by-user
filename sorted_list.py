@@ -47,7 +47,7 @@ def main(*args):
             )
         row_text =  _row + row_text
     new_text = init_text + row_text + "\n|}"
-    list_page_name = "User:Eatcha/sandbox"
+    list_page_name = "User:EatchaBot/Files-requiring-license-review-sorted-list"
     list_page = pywikibot.Page(SITE, list_page_name)
     summary = "list of files"
     print ("saving list")
