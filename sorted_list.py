@@ -30,10 +30,9 @@ def main(*args):
     
     row_text = ""
     
-    serial_no = 0
+    serial_no = len(sorted_num_name_dict)
     print ("creating rows")
     for x in sorted_num_name_dict:
-        serial_no += 1
         gallery_page = x[0]
         name = gallery_page.replace("User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/","")
         count = x[1][0]
@@ -45,6 +44,7 @@ def main(*args):
             name,
             name
             )
+        serial_no -= 1
         row_text =  _row + row_text
     new_text = init_text + row_text + "\n|}"
     list_page_name = "User:EatchaBot/Files-requiring-license-review-sorted-list"
