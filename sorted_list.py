@@ -35,7 +35,7 @@ def main(*args):
     for x in sorted_num_name_dict:
         serial_no += 1
         name = x[0]
-        count = ''.join(x[1])
+        count = str(x[1])
         print (count)
         _row = """\n| %d\n| %s\n| %s\n| [[User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/%s|%s]]\n|- style="background:  #ffffff; color:  #000000  ;" """ % (
             serial_no,
