@@ -43,7 +43,7 @@ def list_maker():
     gen3 = pagegenerators.CategorizedPageGenerator(category3)
     #gen = chain(gen1, gen2, gen3)
 
-    gen_list = [gen1, gen2, gen3]
+    gen_list = [gen3, gen1, gen2]
     #uploader_and_uploads = {}
     __count = 0
     for gen in gen_list:
