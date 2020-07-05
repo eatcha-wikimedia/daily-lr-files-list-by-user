@@ -56,7 +56,7 @@ def list_maker():
             try:
                 user_review_subpage_old_text = user_review_subpage.get(get_redirect=True, force=True)
             except pywikibot.NoPage:
-                user_review_subpage_old_text = "<gallery showfilename=yes>\n</gallery>\n[[Category:Files requiring license review sorted by user name]]"
+                user_review_subpage_old_text = """<p style="border-top: 2px solid #000;border-bottom: 2px solid #000;background-color: #6f6e6d ;color:#ffffff" align="center">&#8594; Sorted list available at [[User:EatchaBot/Files-requiring-license-review-sorted-list|<span style="color:#ffffff">'''User:EatchaBot/Files-requiring-license-review-sorted-list'''</span>]].</p>\n<gallery showfilename=yes>\n</gallery>\n[[Category:Files requiring license review sorted by user name]]"""
             
             if file_name in user_review_subpage_old_text:
                 continue
