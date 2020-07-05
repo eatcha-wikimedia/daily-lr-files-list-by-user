@@ -1,24 +1,39 @@
 import pywikibot
 import operator
+import concurrent.futures
 from pywikibot import pagegenerators
+
+
+num_name_dict = {}
+
+def worker(page):
+    global num_name_dict
+    name = page.title()
+    if name.startswith( 'User:EatchaBot/' ):
+        print(name)
+        file_page = pywikibot.Page(SITE, name)
+        content = file_page.get(get_redirect=True, force=True)
+        number_of_files = content.count("File:")
+        num_name_dict[name] = [number_of_files]
+    
 
 def main(*args):
     global SITE
+
     args = pywikibot.handle_args(*args)
     SITE = pywikibot.Site()
+
     if not SITE.logged_in():
         SITE.login()
+
     gen = pagegenerators.CategorizedPageGenerator(pywikibot.Category(SITE,'Files requiring license review sorted by user name'))
-    num_name_dict = {}
-    for page in gen:
-        name = page.title()
-        if name.startswith( 'User:EatchaBot/' ):
-            print(name)
-            file_page = pywikibot.Page(SITE, name)
-            content = file_page.get(get_redirect=True, force=True)
-            number_of_files = content.count("File:")
-            num_name_dict[name] = [number_of_files]
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        executor.map(worker, gen)
+    
+    
+
     print("sorting")
+    global num_name_dict
     sorted_num_name_dict = sorted(num_name_dict.items(), key=operator.itemgetter(1))
     
     init_text = """{| class="wikitable sortable"\n|-\n
