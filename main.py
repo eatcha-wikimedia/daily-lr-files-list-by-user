@@ -64,7 +64,7 @@ def list_maker():
             if (user_review_subpage_old_text.find('<gallery showfilename=yes>') != -1):
                 pass
             else:
-                user_review_subpage_old_text = "<gallery showfilename=yes>\n</gallery>\n[[Category:Files requiring license review sorted by user name]]"
+                user_review_subpage_old_text = """<p style="border-top: 2px solid #000;border-bottom: 2px solid #000;background-color: #6f6e6d ;color:#ffffff" align="center">&#8594; Sorted list available at [[User:EatchaBot/Files-requiring-license-review-sorted-list|<span style="color:#ffffff">'''User:EatchaBot/Files-requiring-license-review-sorted-list'''</span>]].</p>\n<gallery showfilename=yes>\n</gallery>\n[[Category:Files requiring license review sorted by user name]]"""
             
             m = re.search(r"(?ms)<gallery showfilename=yes>(.*)</gallery>", user_review_subpage_old_text)
             try:
