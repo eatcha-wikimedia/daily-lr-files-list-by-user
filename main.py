@@ -87,24 +87,23 @@ def gallery_maker():
         else:
             user_review_subpage_old_text = """<p style="border-top: 2px solid #000;border-bottom: 2px solid #000;background-color: #6f6e6d ;color:#ffffff" align="center">&#8594; Sorted list available at [[User:EatchaBot/Files-requiring-license-review-sorted-list|<span style="color:#ffffff">'''User:EatchaBot/Files-requiring-license-review-sorted-list'''</span>]].</p>\n<gallery showfilename=yes>\n</gallery>\n[[Category:Files requiring license review sorted by user name]]"""
         
-        m = re.search(r"(?ms)<gallery showfilename=yes>(.*)</gallery>", user_review_subpage_old_text)
-        try:
-            _count = m.group(0).count("\n")
-        except:
-            _count = 1
-
+        _count = user_review_subpage_old_text.count("File:")
         _text = ""
+
         for file_name in file_list:
-            row =  "%s|%s\n</gallery>" % (file_name, _count,)
-            
+            _count += 1
+            row =  "%s|%s\n" % (file_name, _count)
+            _text = _text + row
         
-        
-        user_review_subpage_new_text = re.sub("</gallery>", "%s|%s\n</gallery>" % (file_name, _count,) , user_review_subpage_old_text)
-        user_review_subpage_EditSummary = "Adding [[%s]]" % (file_name)
+        _text = _text + "</gallery>"
+
+        new_text = user_review_subpage_old_text.replace("</gallery>", _text)
+        user_review_subpage_EditSummary = "Adding %d files" % (len(file_list))
+
         try:
-            commit(user_review_subpage_old_text, user_review_subpage_new_text, user_review_subpage, "{0}".format(user_review_subpage_EditSummary))
+            commit(user_review_subpage_old_text, new_text, user_review_subpage, "{0}".format(user_review_subpage_EditSummary))
         except pywikibot.LockedPage as error:
-            return
+            continue
     
     
 def main(*args):
