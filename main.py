@@ -92,16 +92,24 @@ def list_maker():
     
     category1 = pywikibot.Category(SITE,'License review needed')
     gen1 = pagegenerators.CategorizedPageGenerator(category1)
+
     category2 = pywikibot.Category(SITE,'License review needed (video)')
     gen2 = pagegenerators.CategorizedPageGenerator(category2)
+
     category3 = pywikibot.Category(SITE,'License review needed (audio)')
     gen3 = pagegenerators.CategorizedPageGenerator(category3)
-    gen_list = [gen3, gen1, gen2]
 
 
-    for gen in gen_list:
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            executor.map(worker, gen)
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+            executor.map(worker, gen1)
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+            executor.map(worker, gen2)
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+            executor.map(worker, gen3)
+
 
     
 
