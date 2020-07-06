@@ -56,20 +56,8 @@ def dict_maker(page):
             _list.append(file_name)
             uploader_files_list_dict[Uploader] = _list
 
-def gallery_maker():
-    
-    category1 = pywikibot.Category(SITE,'License review needed (video)')
-    gen2 = pagegenerators.CategorizedPageGenerator(category1)
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-            executor.map(dict_maker, gen2)
-
-    category2 = pywikibot.Category(SITE,'License review needed (audio)')
-    gen3 = pagegenerators.CategorizedPageGenerator(category2)
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-            executor.map(dict_maker, gen3)
-
+def operator():
     global uploader_files_list_dict
-
     for Uploader, file_list in uploader_files_list_dict.items():
         print(Uploader)
         user_review_subpage_name = "User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/%s" % Uploader
@@ -106,7 +94,33 @@ def gallery_maker():
         except Exception as e:
             print(e)
             continue
-    
+
+def gallery_maker():
+
+    category1 = pywikibot.Category(SITE,'License review needed (video)')
+    gen1 = pagegenerators.CategorizedPageGenerator(category1)
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+            executor.map(dict_maker, gen1)
+
+    category2 = pywikibot.Category(SITE,'License review needed (audio)')
+    gen3 = pagegenerators.CategorizedPageGenerator(category2)
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+            executor.map(dict_maker, gen3)
+
+    operator()
+
+    # Free some memory
+    uploader_files_list_dict = {}
+    global __count
+    __count = 0
+
+    category3 = pywikibot.Category(SITE,'License review needed')
+    gen3 = pagegenerators.CategorizedPageGenerator(category1)
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+            executor.map(dict_maker, gen3)
+
+    operator()
+
     
 def main(*args):
     global SITE
