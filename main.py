@@ -38,7 +38,7 @@ __count = 0
 
 uploader_files_list_dict = {}
 
-def worker(page)
+def worker(page):
     file_name = page.title()
     if file_name.startswith("File:"):
         global __count
@@ -46,6 +46,7 @@ def worker(page)
         print("%d - %s" % (__count, file_name))
         
         Uploader = uploader(file_name, link=False)
+        global uploader_files_list_dict
         if uploader_files_list_dict.get(Uploader):
             list_ = uploader_files_list_dict.get(Uploader)
             list_.append(file_name)
