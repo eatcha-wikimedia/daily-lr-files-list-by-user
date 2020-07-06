@@ -56,10 +56,8 @@ def dict_maker(page):
             _list.append(file_name)
             uploader_files_list_dict[Uploader] = _list
 
-    __count = None
-
 def gallery_maker():
-
+    
     category1 = pywikibot.Category(SITE,'License review needed (video)')
     gen2 = pagegenerators.CategorizedPageGenerator(category1)
     with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -71,16 +69,15 @@ def gallery_maker():
             executor.map(dict_maker, gen3)
 
     global uploader_files_list_dict
+
     for Uploader, file_list in uploader_files_list_dict.items():
+        print(Uploader)
         user_review_subpage_name = "User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/%s" % Uploader
         user_review_subpage = pywikibot.Page(SITE, user_review_subpage_name)
         try:
             user_review_subpage_old_text = user_review_subpage.get(get_redirect=True, force=True)
         except pywikibot.NoPage:
             user_review_subpage_old_text = """<p style="border-top: 2px solid #000;border-bottom: 2px solid #000;background-color: #6f6e6d ;color:#ffffff" align="center">&#8594; Sorted list available at [[User:EatchaBot/Files-requiring-license-review-sorted-list|<span style="color:#ffffff">'''User:EatchaBot/Files-requiring-license-review-sorted-list'''</span>]].</p>\n<gallery showfilename=yes>\n</gallery>\n[[Category:Files requiring license review sorted by user name]]"""
-        
-        if file_name in user_review_subpage_old_text:
-            continue
         
         if (user_review_subpage_old_text.find('<gallery showfilename=yes>') != -1):
             pass
@@ -91,6 +88,10 @@ def gallery_maker():
         _text = ""
 
         for file_name in file_list:
+
+            if file_name in user_review_subpage_old_text:
+                continue
+
             _count += 1
             row =  "%s|%s\n" % (file_name, _count)
             _text = _text + row
