@@ -38,7 +38,7 @@ __count = 0
 
 uploader_files_list_dict = {}
 
-def worker(page):
+def dict_maker(page):
     file_name = page.title()
     if file_name.startswith("File:"):
         global __count
@@ -89,30 +89,19 @@ def worker(page):
         #     return
 
 def list_maker():
+
+    category1 = pywikibot.Category(SITE,'License review needed (video)')
+    gen2 = pagegenerators.CategorizedPageGenerator(category1)
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+            executor.map(dict_maker, gen2)
+
+    category2 = pywikibot.Category(SITE,'License review needed (audio)')
+    gen3 = pagegenerators.CategorizedPageGenerator(category2)
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+            executor.map(dict_maker, gen3)
     
-    category1 = pywikibot.Category(SITE,'License review needed')
-    gen1 = pagegenerators.CategorizedPageGenerator(category1)
-
-    category2 = pywikibot.Category(SITE,'License review needed (video)')
-    gen2 = pagegenerators.CategorizedPageGenerator(category2)
-
-    category3 = pywikibot.Category(SITE,'License review needed (audio)')
-    gen3 = pagegenerators.CategorizedPageGenerator(category3)
-
-
-
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-            executor.map(worker, gen1)
-
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-            executor.map(worker, gen2)
-
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-            executor.map(worker, gen3)
-
-
     
-
+    
 def main(*args):
     global SITE
     args = pywikibot.handle_args(*args)
