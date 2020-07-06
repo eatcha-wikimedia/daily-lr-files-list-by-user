@@ -44,7 +44,7 @@ def dict_maker(page):
         global __count
         __count += 1 
         print("%d - %s" % (__count, file_name))
-        
+
         Uploader = uploader(file_name, link=False)
         global uploader_files_list_dict
         if uploader_files_list_dict.get(Uploader):
@@ -56,39 +56,9 @@ def dict_maker(page):
             _list.append(file_name)
             uploader_files_list_dict[Uploader] = _list
 
+    __count = None
 
-
-
-
-        # user_review_subpage_name = "User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/%s" % Uploader
-        # user_review_subpage = pywikibot.Page(SITE, user_review_subpage_name)
-        # try:
-        #     user_review_subpage_old_text = user_review_subpage.get(get_redirect=True, force=True)
-        # except pywikibot.NoPage:
-        #     user_review_subpage_old_text = """<p style="border-top: 2px solid #000;border-bottom: 2px solid #000;background-color: #6f6e6d ;color:#ffffff" align="center">&#8594; Sorted list available at [[User:EatchaBot/Files-requiring-license-review-sorted-list|<span style="color:#ffffff">'''User:EatchaBot/Files-requiring-license-review-sorted-list'''</span>]].</p>\n<gallery showfilename=yes>\n</gallery>\n[[Category:Files requiring license review sorted by user name]]"""
-        
-        # if file_name in user_review_subpage_old_text:
-        #     return
-        
-        # if (user_review_subpage_old_text.find('<gallery showfilename=yes>') != -1):
-        #     pass
-        # else:
-        #     user_review_subpage_old_text = """<p style="border-top: 2px solid #000;border-bottom: 2px solid #000;background-color: #6f6e6d ;color:#ffffff" align="center">&#8594; Sorted list available at [[User:EatchaBot/Files-requiring-license-review-sorted-list|<span style="color:#ffffff">'''User:EatchaBot/Files-requiring-license-review-sorted-list'''</span>]].</p>\n<gallery showfilename=yes>\n</gallery>\n[[Category:Files requiring license review sorted by user name]]"""
-        
-        # m = re.search(r"(?ms)<gallery showfilename=yes>(.*)</gallery>", user_review_subpage_old_text)
-        # try:
-        #     _count = m.group(0).count("\n")
-        # except:
-        #     _count = 1
-        
-        # user_review_subpage_new_text = re.sub("</gallery>", "%s|%s\n</gallery>" % (file_name, _count,) , user_review_subpage_old_text)
-        # user_review_subpage_EditSummary = "Adding [[%s]]" % (file_name)
-        # try:
-        #     commit(user_review_subpage_old_text, user_review_subpage_new_text, user_review_subpage, "{0}".format(user_review_subpage_EditSummary))
-        # except pywikibot.LockedPage as error:
-        #     return
-
-def list_maker():
+def gallery_maker():
 
     category1 = pywikibot.Category(SITE,'License review needed (video)')
     gen2 = pagegenerators.CategorizedPageGenerator(category1)
@@ -99,7 +69,42 @@ def list_maker():
     gen3 = pagegenerators.CategorizedPageGenerator(category2)
     with concurrent.futures.ThreadPoolExecutor() as executor:
             executor.map(dict_maker, gen3)
-    
+
+    global uploader_files_list_dict
+    for Uploader, file_list in uploader_files_list_dict.items():
+        user_review_subpage_name = "User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/%s" % Uploader
+        user_review_subpage = pywikibot.Page(SITE, user_review_subpage_name)
+        try:
+            user_review_subpage_old_text = user_review_subpage.get(get_redirect=True, force=True)
+        except pywikibot.NoPage:
+            user_review_subpage_old_text = """<p style="border-top: 2px solid #000;border-bottom: 2px solid #000;background-color: #6f6e6d ;color:#ffffff" align="center">&#8594; Sorted list available at [[User:EatchaBot/Files-requiring-license-review-sorted-list|<span style="color:#ffffff">'''User:EatchaBot/Files-requiring-license-review-sorted-list'''</span>]].</p>\n<gallery showfilename=yes>\n</gallery>\n[[Category:Files requiring license review sorted by user name]]"""
+        
+        if file_name in user_review_subpage_old_text:
+            continue
+        
+        if (user_review_subpage_old_text.find('<gallery showfilename=yes>') != -1):
+            pass
+        else:
+            user_review_subpage_old_text = """<p style="border-top: 2px solid #000;border-bottom: 2px solid #000;background-color: #6f6e6d ;color:#ffffff" align="center">&#8594; Sorted list available at [[User:EatchaBot/Files-requiring-license-review-sorted-list|<span style="color:#ffffff">'''User:EatchaBot/Files-requiring-license-review-sorted-list'''</span>]].</p>\n<gallery showfilename=yes>\n</gallery>\n[[Category:Files requiring license review sorted by user name]]"""
+        
+        m = re.search(r"(?ms)<gallery showfilename=yes>(.*)</gallery>", user_review_subpage_old_text)
+        try:
+            _count = m.group(0).count("\n")
+        except:
+            _count = 1
+
+        _text = ""
+        for file_name in file_list:
+            row =  "%s|%s\n</gallery>" % (file_name, _count,)
+            
+        
+        
+        user_review_subpage_new_text = re.sub("</gallery>", "%s|%s\n</gallery>" % (file_name, _count,) , user_review_subpage_old_text)
+        user_review_subpage_EditSummary = "Adding [[%s]]" % (file_name)
+        try:
+            commit(user_review_subpage_old_text, user_review_subpage_new_text, user_review_subpage, "{0}".format(user_review_subpage_EditSummary))
+        except pywikibot.LockedPage as error:
+            return
     
     
 def main(*args):
@@ -109,7 +114,7 @@ def main(*args):
     if not SITE.logged_in():
         SITE.login()
 
-    list_maker()
+    gallery_maker()
 
 if __name__ == "__main__":
     try:
