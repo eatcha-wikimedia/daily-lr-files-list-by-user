@@ -103,7 +103,8 @@ def gallery_maker():
 
         try:
             commit(user_review_subpage_old_text, new_text, user_review_subpage, "{0}".format(user_review_subpage_EditSummary))
-        except pywikibot.LockedPage as error:
+        except Exception as e:
+            print(e)
             continue
     
     
