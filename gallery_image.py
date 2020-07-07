@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import multiprocessing
+import time
 import pywikibot
 import re
 from itertools import chain
@@ -81,7 +83,15 @@ def main(*args):
     if not SITE.logged_in():
         SITE.login()
 
-    list_maker()
+    proc = multiprocessing.Process(target=list_maker, name="ListMaker")
+    proc.start()
+    time_to_wait = 2 #In hours
+    proc.join(time_to_wait*3600)
+    if proc.is_alive():
+        print ("list_maker is takin too mcuh time, force killing it.")
+        proc.terminate()
+        proc.join()
+
 
 if __name__ == "__main__":
     try:
