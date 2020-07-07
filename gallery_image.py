@@ -7,7 +7,7 @@ import concurrent.futures
 import mwclient
 site = mwclient.Site(('https', 'commons.wikimedia.org'))
 
-f=open("~/passwords/mwc.py","r")
+f=open("data/project/eatchabot/passwords/mwc.py","r")
 lines=f.readlines()
 username=lines[0]
 password=lines[1]
