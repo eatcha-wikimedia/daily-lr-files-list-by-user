@@ -88,7 +88,9 @@ def operator(param):
 
     new_text = user_review_subpage_old_text.replace("</gallery>", _text)
     user_review_subpage_EditSummary = "Adding %d files" % (len(file_list))
-
+    
+    if user_review_subpage_old_text == new_text:
+        return
     try:
         commit(user_review_subpage_old_text, new_text, user_review_subpage, "{0}".format(user_review_subpage_EditSummary))
     except Exception as e:
