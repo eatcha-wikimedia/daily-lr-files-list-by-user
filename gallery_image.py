@@ -64,6 +64,8 @@ def example_func(page):
         
         user_review_subpage_new_text = re.sub("</gallery>", "%s|%s\n</gallery>" % (file_name, _count,) , user_review_subpage_old_text)
         user_review_subpage_EditSummary = "Adding [[%s]]" % (file_name)
+        IF user_review_subpage_old_text == user_review_subpage_new_text:
+            return
         try:
             commit(user_review_subpage_old_text, user_review_subpage_new_text, user_review_subpage, "{0}".format(user_review_subpage_EditSummary))
         except pywikibot.LockedPage as error:
@@ -73,7 +75,7 @@ def example_func(page):
 def list_maker():
     
     category1 = pywikibot.Category(SITE,'License review needed')
-    gen1 = pagegenerators.CategorizedPageGenerator(category1)
+    gen1 = pagegenerators.CategorizedPageGenerator(category1, namespaces=6, recurse=False, total = 15000)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
             executor.map(example_func, gen1)
