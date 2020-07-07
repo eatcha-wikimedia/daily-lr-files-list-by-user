@@ -6,7 +6,7 @@ from pywikibot import pagegenerators
 import concurrent.futures
 import mwclient
 site = mwclient.Site(('https', 'commons.wikimedia.org'))
-site.login('EatchaBot', 'ad67a56awfdysd67arsy')
+site.login('EatchaBot', 'hgduyat37qgiyh8iwrfia')
 
 def uploader(filename, link=True):
     """User that uploaded the file."""
@@ -41,7 +41,7 @@ __count = 0
 uploader_files_list_dict = {}
 
 def dict_maker(page):
-    file_name = page.title()
+    file_name = page.name
     if file_name.startswith("File:"):
         global __count
         __count += 1 
@@ -103,8 +103,11 @@ def operator(param):
 def gallery_maker():
 
     gen1 = site.Categories['License review needed']
-    with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
-            executor.map(dict_maker, gen1)
+    try:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+                executor.map(dict_maker, gen1)
+    except IndexError:
+        pass
 
     global uploader_files_list_dict
     with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
