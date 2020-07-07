@@ -6,7 +6,13 @@ from pywikibot import pagegenerators
 import concurrent.futures
 import mwclient
 site = mwclient.Site(('https', 'commons.wikimedia.org'))
-site.login('EatchaBot', 'hgduyat37qgiyh8iwrfia')
+
+f=open("~/passwords/mwc.py","r")
+lines=f.readlines()
+username=lines[0]
+password=lines[1]
+f.close()
+site.login(username, password)
 
 def uploader(filename, link=True):
     """User that uploaded the file."""
