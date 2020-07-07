@@ -13,7 +13,9 @@ lines=f.readlines()
 username=lines[0]
 password=lines[1]
 f.close()
-print(username, password)
+print(username)
+print(password)
+
 site.login(username, password)
 
 def uploader(filename, link=True):
