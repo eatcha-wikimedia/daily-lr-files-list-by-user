@@ -109,17 +109,6 @@ def gallery_maker():
 
     operator()
 
-    # Free some memory
-    uploader_files_list_dict = {}
-    global __count
-    __count = 0
-
-    category3 = pywikibot.Category(SITE,'License review needed')
-    gen3 = pagegenerators.CategorizedPageGenerator(category1)
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-            executor.map(dict_maker, gen3)
-
-    operator()
 
     
 def main(*args):
