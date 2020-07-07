@@ -10,8 +10,8 @@ site = mwclient.Site(('https', 'commons.wikimedia.org'))
 
 f=open("/data/project/eatchabot/passwords/mwc.py","r")
 lines=f.readlines()
-username=lines[0]
-password=lines[1]
+username=lines[0].strip()
+password=lines[1].strip()
 f.close()
 print(username)
 print(password)
