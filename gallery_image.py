@@ -3,7 +3,6 @@ import multiprocessing
 import time
 import pywikibot
 import re
-from itertools import chain
 from datetime import datetime
 from pywikibot import pagegenerators
 
