@@ -42,7 +42,7 @@ def dict_maker(page):
     if file_name.startswith("File:"):
         global __count
         __count += 1 
-        print("%d - %s" % (__count, file_name))
+        out("%d - %s" % (__count, file_name))
 
         Uploader = uploader(file_name, link=False)
         global uploader_files_list_dict
@@ -58,7 +58,7 @@ def dict_maker(page):
 def operator(param):
     Uploader = param[0]
     file_list = param[1]
-    print(Uploader)
+    out(Uploader)
 
     user_review_subpage_name = "User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/%s" % Uploader
     user_review_subpage = pywikibot.Page(SITE, user_review_subpage_name)
@@ -92,8 +92,8 @@ def operator(param):
     try:
         commit(user_review_subpage_old_text, new_text, user_review_subpage, "{0}".format(user_review_subpage_EditSummary))
     except Exception as e:
-        print(e)
-        continue
+        out(e)
+        return
 
 def gallery_maker():
 
