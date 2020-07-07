@@ -5,6 +5,7 @@ from datetime import datetime
 from pywikibot import pagegenerators
 import concurrent.futures
 import mwclient
+
 site = mwclient.Site(('https', 'commons.wikimedia.org'))
 
 f=open("/data/project/eatchabot/passwords/mwc.py","r")
@@ -12,6 +13,7 @@ lines=f.readlines()
 username=lines[0]
 password=lines[1]
 f.close()
+print(username, password)
 site.login(username, password)
 
 def uploader(filename, link=True):
