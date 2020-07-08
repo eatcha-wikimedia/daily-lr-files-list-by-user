@@ -6,6 +6,7 @@ from pywikibot import pagegenerators
 import concurrent.futures
 import mwclient
 
+
 site = mwclient.Site(('https', 'commons.wikimedia.org'))
 
 f=open("/data/project/eatchabot/passwords/mwc.py","r")
