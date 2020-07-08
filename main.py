@@ -15,7 +15,7 @@ from itertools import chain
 # The bug: try iteration over all the file in commons category "License review needed"
 # The generator doesn't exhaust , why ? IDK
 import mwclient
-site = mwclient.Site(('https', 'commons.wikimedia.org'))
+site = mwclient.Site('commons.wikimedia.org')
 f=open("/data/project/eatchabot/passwords/mwc.py","r")
 lines=f.readlines()
 username=lines[0].strip()
@@ -187,7 +187,7 @@ def main(*args):
     SITE = pywikibot.Site()
     if not SITE.logged_in():
         SITE.login()
-    
+
     # Fills the galleries with current files
     gallery_maker()
 
