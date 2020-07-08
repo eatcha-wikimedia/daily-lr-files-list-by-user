@@ -5,6 +5,11 @@ from datetime import datetime
 from pywikibot import pagegenerators
 import concurrent.futures
 from itertools import chain
+
+# WTF am I using 2 mwapi API libs ? I love pywikibot but there's a bug in the pagegenerator 
+# The bug: try iteration over all the file in commons category "License review needed"
+# The generator doesn't exhaust , why ? IDK
+
 import mwclient
 site = mwclient.Site(('https', 'commons.wikimedia.org'))
 
