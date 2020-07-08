@@ -22,7 +22,6 @@ password=lines[1].strip()
 f.close()
 site.login(username, password)
 
-
 def uploader(filename, link=True):
     """User that uploaded the file."""
     history = (pywikibot.Page(SITE, filename)).revisions(reverse=True, total=1)
@@ -72,44 +71,35 @@ def dict_maker(page):
             _list.append(file_name)
             uploader_files_list_dict[Uploader] = _list
 
+num_name_dict = {}
 def gallery_operator(param):
     Uploader = param[0]
     file_list = param[1]
+    number_of_files = len(file_list)
     out(Uploader)
+    global num_name_dict
+    num_name_dict[Uploader] = [number_of_files]
 
     user_review_subpage_name = "User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/%s" % Uploader
     user_review_subpage = pywikibot.Page(SITE, user_review_subpage_name)
-    try:
-        user_review_subpage_old_text = user_review_subpage.get(get_redirect=True, force=True)
-    except pywikibot.NoPage:
-        user_review_subpage_old_text = """<p style="border-top: 2px solid #000;border-bottom: 2px solid #000;background-color: #6f6e6d ;color:#ffffff" align="center">&#8594; Sorted list available at [[User:EatchaBot/Files-requiring-license-review-sorted-list|<span style="color:#ffffff">'''User:EatchaBot/Files-requiring-license-review-sorted-list'''</span>]].</p>\n<gallery showfilename=yes>\n</gallery>\n[[Category:Files requiring license review sorted by user name]]"""
+    template = """<p style="border-top: 2px solid #000;border-bottom: 2px solid #000;background-color: #6f6e6d ;color:#ffffff" align="center">&#8594; Sorted list available at [[User:EatchaBot/Files-requiring-license-review-sorted-list|<span style="color:#ffffff">'''User:EatchaBot/Files-requiring-license-review-sorted-list'''</span>]].</p>\n<gallery showfilename=yes>\n</gallery>\n[[Category:Files requiring license review sorted by user name]]"""
     
-    if (user_review_subpage_old_text.find('<gallery showfilename=yes>') != -1):
-        pass
-    else:
-        user_review_subpage_old_text = """<p style="border-top: 2px solid #000;border-bottom: 2px solid #000;background-color: #6f6e6d ;color:#ffffff" align="center">&#8594; Sorted list available at [[User:EatchaBot/Files-requiring-license-review-sorted-list|<span style="color:#ffffff">'''User:EatchaBot/Files-requiring-license-review-sorted-list'''</span>]].</p>\n<gallery showfilename=yes>\n</gallery>\n[[Category:Files requiring license review sorted by user name]]"""
-    
-    _count = user_review_subpage_old_text.count("File:")
+    _count = 0
     _text = ""
-
     for file_name in file_list:
-
-        if file_name in user_review_subpage_old_text:
-            continue
-
         _count += 1
         row =  "%s|%s\n" % (file_name, _count)
         _text = _text + row
-    
     _text = _text + "</gallery>"
 
-    new_text = user_review_subpage_old_text.replace("</gallery>", _text)
-    user_review_subpage_EditSummary = "Adding %d files" % (len(file_list))
-    
-    if user_review_subpage_old_text == new_text:
+    new_text = template.replace("</gallery>", _text)
+    EditSummary = "Adding %d files" % (number_of_files)
+
+    if template == new_text:
         return
+
     try:
-        commit(user_review_subpage_old_text, new_text, user_review_subpage, "{0}".format(user_review_subpage_EditSummary))
+        commit("", new_text, user_review_subpage, "{0}".format(EditSummary))
     except Exception as e:
         out(e)
         return
@@ -130,31 +120,6 @@ def gallery_maker():
     global uploader_files_list_dict
     with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
         executor.map(gallery_operator, uploader_files_list_dict.items())
-
-def cleaner_worker(page):
-    name = page.title()
-    if name.startswith( 'User:EatchaBot/' ):
-        print(name)
-        file_page = pywikibot.Page(SITE, name)
-        old_text = file_page.get(get_redirect=True, force=True)
-        if old_text.isspace():
-            return
-        EditSummary = "flushed old list, will generate new list every week."
-        try:
-            page.put("", summary=EditSummary, watch=True, minor=False)
-        except:
-            pass
-
-num_name_dict = {}
-def list_worker(page):
-    global num_name_dict
-    name = page.title()
-    if name.startswith( 'User:EatchaBot/' ):
-        print(name)
-        file_page = pywikibot.Page(SITE, name)
-        content = file_page.get(get_redirect=True, force=True)
-        number_of_files = content.count("File:")
-        num_name_dict[name] = [number_of_files]
 
 def list_maker():
     print("sorting")
@@ -200,20 +165,12 @@ def main(*args):
     SITE = pywikibot.Site()
     if not SITE.logged_in():
         SITE.login()
-
-    # Empties all the galleries
-    gen = pagegenerators.CategorizedPageGenerator(pywikibot.Category(SITE, 'Files requiring license review sorted by user name'))
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        executor.map(cleaner_worker, gen)
     
     # Fills the galleries with current files
     gallery_maker()
 
 
     # Updates the list by username
-    gen = pagegenerators.CategorizedPageGenerator(pywikibot.Category(SITE,'Files requiring license review sorted by user name'))
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        executor.map(list_worker, gen)
     list_maker()
 
 
