@@ -73,7 +73,7 @@ def dict_maker(page):
             _list.append(file_name)
             uploader_files_list_dict[Uploader] = _list
 
-def operator(param):
+def gallery_operator(param):
     Uploader = param[0]
     file_list = param[1]
     out(Uploader)
@@ -131,7 +131,7 @@ def gallery_maker():
 
     global uploader_files_list_dict
     with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
-        executor.map(operator, uploader_files_list_dict.items())
+        executor.map(gallery_operator, uploader_files_list_dict.items())
 
 def cleaner_worker(page):
     name = page.title()
@@ -147,6 +147,55 @@ def cleaner_worker(page):
         except:
             pass
 
+num_name_dict = {}
+def list_worker(page):
+    global num_name_dict
+    name = page.title()
+    if name.startswith( 'User:EatchaBot/' ):
+        print(name)
+        file_page = pywikibot.Page(SITE, name)
+        content = file_page.get(get_redirect=True, force=True)
+        number_of_files = content.count("File:")
+        num_name_dict[name] = [number_of_files]
+
+def list_maker():
+    print("sorting")
+    global num_name_dict
+    sorted_num_name_dict = sorted(num_name_dict.items(), key=operator.itemgetter(1))
+    
+    init_text = """{| class="wikitable sortable"\n|-\n
+! style="background: #000000; color:   #ffffff ;" | '''Rankings ↕️'''
+! style="background: #000000; color:   #ffffff ;" | '''Username ↕️'''
+! style="background: #000000; color:   #ffffff ;" | '''Number of files requiring LR ↕️'''
+! style="background: #000000; color:   #ffffff ;" | '''Link to gallery of all files requiring LR ↕️ '''
+|- style="background:  #ffffff; color:  #000000  ;" """
+    
+    row_text = ""
+    serial_no = len(sorted_num_name_dict)
+    print ("creating rows")
+    for x in sorted_num_name_dict:
+        gallery_page = x[0]
+        name = gallery_page.replace("User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/","")
+        count = x[1][0]
+        print (count)
+        _row = """\n| %d\n| {{noping|%s}}\n| %d\n| [[User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/%s|Gallery for %s's files]]\n|- style="background:  #ffffff; color:  #000000  ;" """ % (
+            serial_no,
+            name,
+            count,
+            name,
+            name
+            )
+        serial_no -= 1
+        row_text =  _row + row_text
+    new_text = init_text + row_text + "\n|}"
+    list_page_name = "User:EatchaBot/Files-requiring-license-review-sorted-list"
+    list_page = pywikibot.Page(SITE, list_page_name)
+    summary = "list of files"
+    print ("saving list")
+    list_page.put(new_text, summary=summary, watchArticle=True, minorEdit=False)
+    print ("OK")
+
+
 def main(*args):
     global SITE
     args = pywikibot.handle_args(*args)
@@ -159,6 +208,13 @@ def main(*args):
         executor.map(cleaner_worker, gen)
 
     gallery_maker()
+    
+    gen = pagegenerators.CategorizedPageGenerator(pywikibot.Category(SITE,'Files requiring license review sorted by user name'))
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        executor.map(list_worker, gen)
+    list_maker()
+
+
 
 if __name__ == "__main__":
     try:
