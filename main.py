@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 import pywikibot
+import operator
 from pywikibot import pagegenerators
 from datetime import datetime
 
