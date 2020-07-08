@@ -120,13 +120,14 @@ def gallery_maker():
     gen1 = site.Categories['License review needed']
     gen2 = site.Categories['License review needed (video)']
     gen3 = site.Categories['License review needed (audio)']
-    gen = chain(gen1, gen2, gen3)
+    gen_list = [gen1, gen2, gen3]
 
-    try:
-        with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
-                executor.map(dict_maker, gen)
-    except IndexError:
-        pass
+    for gen in gen_list:
+        try:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+                    executor.map(dict_maker, gen)
+        except IndexError:
+            pass
 
     global uploader_files_list_dict
     with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
