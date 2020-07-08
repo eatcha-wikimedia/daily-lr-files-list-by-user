@@ -4,8 +4,8 @@ import re
 from datetime import datetime
 from pywikibot import pagegenerators
 import concurrent.futures
+from itertools import chain
 import mwclient
-
 site = mwclient.Site(('https', 'commons.wikimedia.org'))
 
 f=open("/data/project/eatchabot/passwords/mwc.py","r")
@@ -113,9 +113,13 @@ def operator(param):
 def gallery_maker():
 
     gen1 = site.Categories['License review needed']
+    gen2 = site.Categories['License review needed (video)']
+    gen3 = site.Categories['License review needed (audio)']
+    gen = chain(gen1, gen2, gen3)
+
     try:
         with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
-                executor.map(dict_maker, gen1)
+                executor.map(dict_maker, gen)
     except IndexError:
         pass
 
