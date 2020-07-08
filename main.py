@@ -136,11 +136,8 @@ def gallery_maker():
             executor.map(dict_maker_pywikibot, gen_audio)
 
     gen_image = site.Categories['License review needed']
-    try:
-        with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
-                executor.map(dict_maker_mwclient, gen_image)
-    except IndexError:
-        pass
+    for page in gen_image:
+        dict_maker_mwclient(page)
 
     global uploader_files_list_dict
     with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
