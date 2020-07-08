@@ -54,8 +54,26 @@ def commit(old_text, new_text, page, summary):
 
 __count = 0
 uploader_files_list_dict = {}
-def dict_maker(page):
+def dict_maker_mwclient(page):
     file_name = page.name
+    if file_name.startswith("File:"):
+        global __count
+        __count += 1 
+        out("%d - %s" % (__count, file_name))
+
+        Uploader = uploader(file_name, link=False)
+        global uploader_files_list_dict
+        if uploader_files_list_dict.get(Uploader):
+            list_ = uploader_files_list_dict.get(Uploader)
+            list_.append(file_name)
+            uploader_files_list_dict[Uploader] = list_
+        else:
+            _list = []
+            _list.append(file_name)
+            uploader_files_list_dict[Uploader] = _list
+
+def dict_maker_pywikibot(page):
+    file_name = page.title()
     if file_name.startswith("File:"):
         global __count
         __count += 1 
@@ -106,17 +124,23 @@ def gallery_operator(param):
         return
 
 def gallery_maker():
-    gen1 = site.Categories['License review needed']
-    gen2 = site.Categories['License review needed (video)']
-    gen3 = site.Categories['License review needed (audio)']
-    gen_list = [gen1, gen2, gen3]
 
-    for gen in gen_list:
-        try:
-            with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
-                    executor.map(dict_maker, gen)
-        except IndexError:
-            pass
+    category_video = pywikibot.Category(SITE,'License review needed (video)')
+    gen_video = pagegenerators.CategorizedPageGenerator(category_video)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+            executor.map(dict_maker_pywikibot, gen_video)
+
+    category_audio = pywikibot.Category(SITE,'License review needed (audio)')
+    gen_audio = pagegenerators.CategorizedPageGenerator(category_audio)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+            executor.map(dict_maker_pywikibot, gen_audio)
+
+    gen_image = site.Categories['License review needed']
+    try:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+                executor.map(dict_maker_mwclient, gen_image)
+    except IndexError:
+        pass
 
     global uploader_files_list_dict
     with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
