@@ -1,27 +1,27 @@
 # -*- coding: utf-8 -*-
-import pywikibot
 import re
-from datetime import datetime
+import pywikibot
 from pywikibot import pagegenerators
+from datetime import datetime
+
+# for speed up using  threads
 import concurrent.futures
+
+# For chaining the files in images,video and audio lr Categories.
 from itertools import chain
 
 # WTF am I using 2 mwapi API libs ? I love pywikibot but there's a bug in the pagegenerator 
 # The bug: try iteration over all the file in commons category "License review needed"
 # The generator doesn't exhaust , why ? IDK
-
 import mwclient
 site = mwclient.Site(('https', 'commons.wikimedia.org'))
-
 f=open("/data/project/eatchabot/passwords/mwc.py","r")
 lines=f.readlines()
 username=lines[0].strip()
 password=lines[1].strip()
 f.close()
-print(username)
-print(password)
-
 site.login(username, password)
+
 
 def uploader(filename, link=True):
     """User that uploaded the file."""
@@ -35,7 +35,7 @@ def uploader(filename, link=True):
     return username
 
 def out(text, newline=True, date=False, color=None):
-    """output some text to the consoloe / log."""
+    """output some text to the console."""
     if color:
         text = "\03{%s}%s\03{default}" % (color, text)
     dstr = (
@@ -51,10 +51,9 @@ def commit(old_text, new_text, page, summary):
     pywikibot.showDiff(old_text, new_text)
     page.put(new_text, summary=summary, watchArticle=True, minorEdit=False)
 
+
 __count = 0
-
 uploader_files_list_dict = {}
-
 def dict_maker(page):
     file_name = page.name
     if file_name.startswith("File:"):
@@ -116,7 +115,6 @@ def gallery_operator(param):
         return
 
 def gallery_maker():
-
     gen1 = site.Categories['License review needed']
     gen2 = site.Categories['License review needed (video)']
     gen3 = site.Categories['License review needed (audio)']
@@ -203,17 +201,20 @@ def main(*args):
     if not SITE.logged_in():
         SITE.login()
 
+    # Empties all the galleries
     gen = pagegenerators.CategorizedPageGenerator(pywikibot.Category(SITE, 'Files requiring license review sorted by user name'))
     with concurrent.futures.ThreadPoolExecutor() as executor:
         executor.map(cleaner_worker, gen)
-
-    gallery_maker()
     
+    # Fills the galleries with current files
+    gallery_maker()
+
+
+    # Updates the list by username
     gen = pagegenerators.CategorizedPageGenerator(pywikibot.Category(SITE,'Files requiring license review sorted by user name'))
     with concurrent.futures.ThreadPoolExecutor() as executor:
         executor.map(list_worker, gen)
     list_maker()
-
 
 
 if __name__ == "__main__":
