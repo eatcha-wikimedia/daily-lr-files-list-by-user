@@ -3,6 +3,7 @@ import pywikibot
 from pywikibot import pagegenerators
 import concurrent.futures
 
+
 def worker(page):
     name = page.title()
     if name.startswith( 'User:EatchaBot/' ):
