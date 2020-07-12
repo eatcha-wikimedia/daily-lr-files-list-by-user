@@ -5,8 +5,6 @@ import operator
 from pywikibot import pagegenerators
 from datetime import datetime
 
-# for speed up using  threads
-import concurrent.futures
 
 # For chaining the files in images,video and audio lr Categories.
 from itertools import chain
@@ -127,21 +125,21 @@ def gallery_maker():
 
     category_video = pywikibot.Category(SITE,'License review needed (video)')
     gen_video = pagegenerators.CategorizedPageGenerator(category_video)
-    with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
-            executor.map(dict_maker_pywikibot, gen_video)
+    for page in gen_video:
+        dict_maker_pywikibot(page)
 
     category_audio = pywikibot.Category(SITE,'License review needed (audio)')
     gen_audio = pagegenerators.CategorizedPageGenerator(category_audio)
-    with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
-            executor.map(dict_maker_pywikibot, gen_audio)
+    for page in gen_audio:
+        dict_maker_pywikibot(page)
 
     gen_image = site.Categories['License review needed']
     for page in gen_image:
         dict_maker_mwclient(page)
 
     global uploader_files_list_dict
-    with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
-        executor.map(gallery_operator, uploader_files_list_dict.items())
+    for param in uploader_files_list_dict.items():
+        gallery_operator(param)
 
 def list_maker():
     print("sorting")
