@@ -133,9 +133,10 @@ def gallery_maker():
     for page in gen_audio:
         dict_maker_pywikibot(page)
 
-    gen_image = site.Categories['License review needed']
+    category_image = pywikibot.Category(SITE, 'License review needed')
+    gen_image = pagegenerators.CategorizedPageGenerator(category_image)
     for page in gen_image:
-        dict_maker_mwclient(page)
+        dict_maker_pywikibot(page)
 
     global uploader_files_list_dict
     for param in uploader_files_list_dict.items():
