@@ -135,8 +135,12 @@ def gallery_maker():
 
     category_image = pywikibot.Category(SITE, 'License review needed')
     gen_image = pagegenerators.CategorizedPageGenerator(category_image)
-    for page in gen_image:
-        dict_maker_pywikibot(page)
+    try:
+        for page in gen_image:
+            dict_maker_pywikibot(page)
+    except Exception as e:
+        out(e, color="red")
+    
 
     global uploader_files_list_dict
     for param in uploader_files_list_dict.items():
@@ -188,7 +192,9 @@ def main(*args):
         SITE.login()
 
     # Fills the galleries with current files
+
     gallery_maker()
+
 
 
     # Updates the list by username
