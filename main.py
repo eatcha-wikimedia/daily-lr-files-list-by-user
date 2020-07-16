@@ -118,7 +118,7 @@ def gallery_maker():
         gallery_operator(param)
 
 def list_maker():
-    print("sorting")
+    out("sorting")
     global num_name_dict
     sorted_num_name_dict = sorted(num_name_dict.items(), key=operator.itemgetter(1))
     
@@ -131,12 +131,12 @@ def list_maker():
     
     row_text = ""
     serial_no = len(sorted_num_name_dict)
-    print ("creating rows")
+    out("creating rows")
     for x in sorted_num_name_dict:
         gallery_page = x[0]
         name = gallery_page.replace("User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/","")
         count = x[1][0]
-        print (count)
+        out(count)
         _row = """\n| %d\n| {{noping|%s}}\n| %d\n| [[User:EatchaBot/Files-requiring-license-review-gallery-uploaded-by/%s|Gallery for %s's files]]\n|- style="background:  #ffffff; color:  #000000  ;" """ % (
             serial_no,
             name,
@@ -149,10 +149,9 @@ def list_maker():
     new_text = init_text + row_text + "\n|}"
     list_page_name = "User:EatchaBot/Files-requiring-license-review-sorted-list"
     list_page = pywikibot.Page(SITE, list_page_name)
-    summary = "list of files"
-    print ("saving list")
-    list_page.put(new_text, summary=summary, watchArticle=True, minorEdit=False)
-    print ("OK")
+    out("saving list")
+    list_page.put(new_text, summary="Updating list", watchArticle=True, minorEdit=False)
+    out("OK")
 
 
 def main(*args):
