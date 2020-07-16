@@ -9,18 +9,6 @@ from datetime import datetime
 # For chaining the files in images,video and audio lr Categories.
 from itertools import chain
 
-# WTF am I using 2 mwapi API libs ? I love pywikibot but there's a bug in the pagegenerator 
-# The bug: try iteration over all the file in commons category "License review needed"
-# The generator doesn't exhaust , why ? IDK
-import mwclient
-site = mwclient.Site('commons.wikimedia.org')
-f=open("/data/project/eatchabot/passwords/mwc.py","r")
-lines=f.readlines()
-username=lines[0].strip()
-password=lines[1].strip()
-f.close()
-site.login(username, password)
-
 def uploader(filename, link=True):
     """User that uploaded the file."""
     history = (pywikibot.Page(SITE, filename)).revisions(reverse=True, total=1)
@@ -52,23 +40,6 @@ def commit(old_text, new_text, page, summary):
 
 __count = 0
 uploader_files_list_dict = {}
-def dict_maker_mwclient(page):
-    file_name = page.name
-    if file_name.startswith("File:"):
-        global __count
-        __count += 1 
-        out("%d - %s" % (__count, file_name))
-
-        Uploader = uploader(file_name, link=False)
-        global uploader_files_list_dict
-        if uploader_files_list_dict.get(Uploader):
-            list_ = uploader_files_list_dict.get(Uploader)
-            list_.append(file_name)
-            uploader_files_list_dict[Uploader] = list_
-        else:
-            _list = []
-            _list.append(file_name)
-            uploader_files_list_dict[Uploader] = _list
 
 def dict_maker_pywikibot(page):
     file_name = page.title()
