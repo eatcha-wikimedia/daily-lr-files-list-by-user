@@ -1,5 +1,5 @@
-mylang = family = 'commons'
+mylang = family = "commons"
 
-usernames['commons']['commons'] = u'EatchaBot'
+usernames["commons"]["commons"] = "EatchaBot"
 
 password_file = "../passwords/EatchaBot.py"
