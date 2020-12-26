@@ -131,6 +131,8 @@ def gallery_maker():
     except Exception as e:
         out(e, color="red")
 
+    empty_galleries()
+
     global uploader_files_list_dict
     for param in uploader_files_list_dict.items():
         gallery_operator(param)
@@ -170,6 +172,17 @@ def list_maker():
     out("saving list")
     list_page.put(new_text, summary="Updating list", watchArticle=True, minorEdit=False)
     out("OK")
+
+
+def empty_galleries():
+    """
+    Empties the galleries.
+    """
+    cat = "Files requiring license review sorted by user name"
+    gen = pagegenerators.CategorizedPageGenerator(pywikibot.Category(SITE, cat))
+    for page in gen:
+        out("Emptying : %s" % page.title())
+        commit("Everything", "", page, "BOT : Clean-up")
 
 
 def main(*args):
